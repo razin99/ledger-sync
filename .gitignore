@@ -1,1 +1,6 @@
 __pycache__/
+
+# propriety snapshot of the site
+samples/
+
+credentials.json
