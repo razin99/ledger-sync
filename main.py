@@ -44,10 +44,6 @@ def main():
     engine = init_table(f"sqlite:///{args.sqlite}")
     with Session(engine) as session:
         session.execute(delete(Ledger))
-        session.bulk_save_objects(
-            # reversed - helps store objects in descending order (time)
-            [Ledger(**d) for d in reversed(api.current_year_ledger())]
-        )
 
         curr_year = date.today().year
         year_end = args.year_end or (curr_year + 1)
@@ -56,11 +52,10 @@ def main():
 
         for year in range(args.year_start, year_end):
             if year == curr_year:
-                # data loaded from current_year_ledger
-                continue
-            session.bulk_save_objects(
-                [Ledger(**d) for d in reversed(api.past_year_ledger(str(year)))]
-            )
+                data = [Ledger(**d) for d in reversed(api.current_year_ledger())]
+            else:
+                data = [Ledger(**d) for d in reversed(api.past_year_ledger(str(year)))]
+            session.bulk_save_objects(data)
         session.commit()
 
 
