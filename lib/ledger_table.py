@@ -14,7 +14,6 @@ class LedgerData(TypedDict):
     doc_ref: str
     debit: float
     credit: float
-    balance: float
 
 
 def _get_currency_value(s: str):
@@ -40,7 +39,7 @@ def _load_ledger_table(raw_data: str, query: str):
         if len(cols) != cell_count:
             continue
 
-        _tx_date, _tx_code, _doc_ref, _debit, _credit, _balance = [
+        _tx_date, _tx_code, _doc_ref, _debit, _credit = [
             ele.text.strip() for ele in cols
         ]
 
@@ -51,7 +50,6 @@ def _load_ledger_table(raw_data: str, query: str):
                 "doc_ref": _doc_ref,
                 "debit": _get_currency_value(_debit),
                 "credit": _get_currency_value(_credit),
-                "balance": _get_currency_value(_balance),
             }
         )
     return result

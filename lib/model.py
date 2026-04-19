@@ -15,7 +15,6 @@ class Ledger(Base):
     doc_ref: Mapped[str]
     debit: Mapped[float]
     credit: Mapped[float]
-    balance: Mapped[float]
 
     def __repr__(self) -> str:
         fields = [
@@ -25,6 +24,5 @@ class Ledger(Base):
             f"doc_ref={self.doc_ref}",
             f"debit={self.debit}",
             f"credit={self.credit}",
-            f"balance={self.balance}",
         ]
         return f"User({', '.join(fields)})"
