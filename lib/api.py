@@ -83,7 +83,7 @@ class Ebaki:
         res = self.sess.post(
             "frmPrevLedger.aspx",
             params={"AccNo": self._acc_no},
-            headers={
+            data={
                 **aspnet,
                 "ctl00$MainContent$ddlThnPenyata": year,
                 "ctl00$MainContent$BtnCariThn": "Papar",

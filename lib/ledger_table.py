@@ -17,7 +17,7 @@ class LedgerData(TypedDict):
 
 
 def _get_currency_value(s: str):
-    return float("".join(c for c in s if c.isdigit() or c == "."))
+    return float("".join(c for c in s if c.isdigit() or c == ".") or 0.00)
 
 
 def _load_ledger_table(raw_data: str, query: str):
