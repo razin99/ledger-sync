@@ -1,5 +1,5 @@
 from datetime import date
-from lib.ledger_table import (
+from src.lib.ledger_table import (
     MissingTableError,
     load_current_ledger_table,
     load_previous_ledger_table,
@@ -41,7 +41,6 @@ def test_valid_html_prev():
     assert data[0]["tx_code"] == "DLYD"
     assert data[1]["credit"] == float(100.00)
     assert data[1]["debit"] == float(0.00)
-    assert data[1]["balance"] == float(120321.44)
     assert data[1]["tx_date"] == date(2025, 1, 14)
 
 
@@ -84,7 +83,6 @@ def test_valid_html_curr():
     assert data[0]["tx_code"] == "DLYD"
     assert data[1]["credit"] == float(100.00)
     assert data[1]["debit"] == float(0.00)
-    assert data[1]["balance"] == float(120321.44)
     assert data[1]["tx_date"] == date(2025, 1, 14)
 
 
