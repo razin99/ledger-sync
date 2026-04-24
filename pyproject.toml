@@ -17,7 +17,7 @@ requires = ["uv_build==0.11.6"]
 build-backend = "uv_build"
 [tool.uv.build-backend]
 module-name = ["ledger_sync"]
-source-include = ["src/ssl/**"]
+source-include = ["src/ledger_sync/ssl/**"]
 
 [dependency-groups]
 dev = [
