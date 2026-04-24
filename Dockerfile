@@ -1,4 +1,4 @@
-FROM python:3.14-slim AS builder
+FROM python:3.14-alpine AS builder
 COPY --from=ghcr.io/astral-sh/uv:0.11.6 /uv /uvx /bin/
 
 # Use the system Python across both stages
@@ -20,7 +20,10 @@ COPY . /app
 RUN --mount=type=cache,target=/root/.cache/uv \
   uv sync --locked --no-editable --no-dev
 
-FROM python:3.14-slim
+FROM python:3.14-alpine
+
+RUN addgroup -S nonroot && adduser -S nonroot -G nonroot
+USER nonroot
 
 # Copy the environment, but not the source code
 COPY --from=builder /app/.venv /app/.venv
