@@ -3,8 +3,8 @@ import json
 from sqlalchemy import create_engine, delete
 from sqlalchemy.orm import Session
 
-from lib.api import Ebaki
-from lib.model import Base, Ledger
+from ledger_sync.lib.api import Ebaki
+from ledger_sync.lib.model import Base, Ledger
 
 import argparse
 

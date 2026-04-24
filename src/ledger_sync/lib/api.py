@@ -2,7 +2,7 @@ import os
 import niquests
 import bs4
 
-from lib.ledger_table import load_current_ledger_table, load_previous_ledger_table
+from .ledger_table import load_current_ledger_table, load_previous_ledger_table
 
 
 class EbakiError(RuntimeError):
@@ -35,7 +35,7 @@ class Ebaki:
             base_url="https://apps.mara.gov.my/ebakiv2/", headers=FAKE_ASS_HEADER_BRUH
         )
         self.sess.verify = os.path.join(
-            os.path.dirname(__file__), "../ssl/_.mara.gov.pem"
+            os.path.dirname(__file__), "../../ssl/_.mara.gov.pem"
         )
 
     def login(self):
