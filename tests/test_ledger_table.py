@@ -1,5 +1,5 @@
 from datetime import date
-from src.lib.ledger_table import (
+from ledger_sync.lib.ledger_table import (
     MissingTableError,
     load_current_ledger_table,
     load_previous_ledger_table,
