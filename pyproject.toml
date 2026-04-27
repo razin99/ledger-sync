@@ -21,5 +21,6 @@ source-include = ["src/ledger_sync/ssl/**"]
 
 [dependency-groups]
 dev = [
+    "pre-commit>=4.6.0",
     "pytest>=9.0.3",
 ]

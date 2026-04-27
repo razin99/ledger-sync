@@ -11,7 +11,7 @@
         buildInputs = with pkgs; [
           uv
           python314Packages.uv
-          duckdb
+          trufflehog
         ];
         shellHook = ''
           if [ -f .env ]; then
