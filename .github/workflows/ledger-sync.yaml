@@ -1,0 +1,75 @@
+name: Ledger Sync
+on:
+  pull_request:
+    types:
+      - closed
+      - opened
+      - synchronize
+    paths:
+      - .github/workflows/ledger-sync.yaml
+      - src/**
+      - tests/**
+      - Dockerfile
+      - pyproject.toml
+      - uv.lock
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+  attestations: write
+  packages: write
+
+jobs:
+  test:
+    runs-on: &runs-on ubuntu-latest
+    steps:
+      - &checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - &setup-uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          enable-cache: true
+      - name: Run test
+        run: uv run --frozen pytest
+  docker-release:
+    runs-on: *runs-on
+    needs: [test]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - *checkout
+      - *setup-uv
+      - name: Application version
+        id: app-version
+        run: echo "version=$(uv version --short)" >> "$GITHUB_OUTPUT"
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd #v4
+      - name: Docker build and push
+        id: publish
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
+        with:
+          push: true
+          tags: &image ghcr.io/${{ github.repository }}:${{ steps.app-version.outputs.version }}
+      - name: Generate artifact attestation
+        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
+        with:
+          subject-name: &subject-name ghcr.io/${{ github.repository }}
+          subject-digest: ${{ steps.publish.outputs.digest }}
+          push-to-registry: true
+      - name: Generate SBOM
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          image: *image
+          output-file: &sbom spdx.json
+          format: cyclonedx-json
+      - uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
+        with:
+          subject-name: *subject-name
+          subject-digest: ${{ steps.publish.outputs.digest }}
+          push-to-registry: true
+          sbom-path: *sbom
