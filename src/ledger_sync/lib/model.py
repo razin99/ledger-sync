@@ -1,9 +1,10 @@
-from datetime import date
+from datetime import date, datetime
+from sqlalchemy import func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
-    pass
+    updated_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
 
 class Ledger(Base):
